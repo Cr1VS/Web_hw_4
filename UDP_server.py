@@ -72,11 +72,11 @@ class UDP_IP_Server:
         :param data_dict: Dictionary containing data to be saved.
         """
         try:
-            data_path = BASE_DIR.joinpath("storage/data.json")
+            data_path = Path("storage/data.json")
             current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             temp_list = []
             temp_list.append({current_time: data_list})
-            if data_path.is_file() and data_path.stat().st_size > 0:
+            if data_path.exists() and data_path.stat().st_size > 0:
                 with open(data_path, "r", encoding="utf-8") as fh:
                     existing_data = json.load(fh)
                     existing_data.append({current_time: data_list})

@@ -80,27 +80,21 @@ def seve_to_file(data) -> None:
     current_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     temp_list = []
     data_path = Path("storage/data.json")
-    if data_path.is_file() and data_path.stat().st_size > 0:
-        with open(data_path, "a+") as fh:
-            fh.seek(0, 2)
-            if fh.tell() > 0:
-                fh.seek(0)
-                old_data = json.load(fh)
-            else:
-                old_data = []
+    if data_path.exists() and data_path.stat().st_size > 0:
+        with open(data_path, "r") as fh:
+            old_data = json.load(fh)
 
-            data_save = old_data
-            record = {
-                current_time: {
-                    "Username": data_dict["username"],
-                    "Message": data_dict["message"],
-                }
+        data_save = old_data
+        record = {
+            current_time: {
+                "Username": data_dict["username"],
+                "Message": data_dict["message"],
             }
-            data_save.append(record)
+        }
+        data_save.append(record)
 
-            fh.seek(0)
-            fh.truncate()
-            json.dump(data_save, fh, indent=4)
+        with open(data_path, "w", encoding="utf-8") as fh:
+            json.dump(data_save, fh, indent=4, ensure_ascii=False, default=str)
     else:
         temp_list.append({current_time: data_dict})
         with open(data_path, "w", encoding="utf-8") as fh:
